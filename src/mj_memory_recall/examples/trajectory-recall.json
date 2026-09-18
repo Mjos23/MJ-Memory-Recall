@@ -1,0 +1,166 @@
+{
+  "profile": "MJ-Memory-Recall/0.1.0",
+  "namespace": "robotics.lab",
+  "as_of": 100,
+  "frame": {
+    "id": "local-grid",
+    "x_min": "0",
+    "y_min": "0",
+    "width": "800",
+    "height": "600"
+  },
+  "memories": [
+    {
+      "id": "memory-a",
+      "namespace": "robotics.lab",
+      "pattern": [
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9"
+      ],
+      "entity": "robot",
+      "relation": "inspection",
+      "context": "bench",
+      "observed_at": 10,
+      "available_at": 11,
+      "provenance": "OBSERVED",
+      "receipt_ref": "fixture-a",
+      "selection_id": null,
+      "trace": [
+        {
+          "actor": "sensor",
+          "step": 0,
+          "position": [
+            "100",
+            "150"
+          ],
+          "command": "derive"
+        },
+        {
+          "actor": "sensor",
+          "step": 1,
+          "position": [
+            "160",
+            "170"
+          ],
+          "command": "derive"
+        },
+        {
+          "actor": "sensor",
+          "step": 2,
+          "position": [
+            "220",
+            "190"
+          ],
+          "command": "derive"
+        }
+      ]
+    },
+    {
+      "id": "memory-b",
+      "namespace": "robotics.lab",
+      "pattern": [
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9",
+        "0.9"
+      ],
+      "entity": "robot",
+      "relation": "inspection",
+      "context": "bench",
+      "observed_at": 10,
+      "available_at": 11,
+      "provenance": "OBSERVED",
+      "receipt_ref": "fixture-b",
+      "selection_id": null,
+      "trace": [
+        {
+          "actor": "sensor",
+          "step": 0,
+          "position": [
+            "400",
+            "150"
+          ],
+          "command": "derive"
+        },
+        {
+          "actor": "sensor",
+          "step": 1,
+          "position": [
+            "460",
+            "170"
+          ],
+          "command": "derive"
+        },
+        {
+          "actor": "sensor",
+          "step": 2,
+          "position": [
+            "520",
+            "190"
+          ],
+          "command": "derive"
+        }
+      ]
+    }
+  ],
+  "query": {
+    "id": "query-1",
+    "observed_at": 100,
+    "cue": [
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9"
+    ],
+    "entity": "robot",
+    "relation": "inspection",
+    "context": "bench",
+    "previous_command": "measure",
+    "events": [
+      {
+        "actor": "sensor",
+        "step": 0,
+        "position": [
+          "100",
+          "150"
+        ],
+        "command": "derive"
+      },
+      {
+        "actor": "sensor",
+        "step": 1,
+        "position": [
+          "160",
+          "170"
+        ],
+        "command": "derive"
+      },
+      {
+        "actor": "sensor",
+        "step": 2,
+        "position": [
+          "220",
+          "190"
+        ],
+        "command": "derive"
+      }
+    ]
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "coach_program_profile": "SEPARATE_VERSIONED_READ_ONLY_COMPARISON; NEVER_TRAINING_INPUT",
+  "system_media": {
+    "DEFENSE": [
+      "BEAR",
+      "BELICHICK",
+      "CREEPER",
+      "BANGEL",
+      "EVEN",
+      "FANGIO",
+      "LEBO",
+      "MATCH",
+      "MINT",
+      "ODD",
+      "SABAN",
+      "TITE"
+    ],
+    "OFFENSE": [
+      "AIRRAID",
+      "BANGEL",
+      "ERHARDT_PERKINS",
+      "MULTIPLE",
+      "PISTOL",
+      "POWER_SPREAD",
+      "PROSTYLE",
+      "RUN_AND_SHOOT",
+      "SHANAHAN",
+      "SPREAD",
+      "WESTCOAST",
+      "WING_T"
+    ]
+  },
+  "variants": [
+    {
+      "id": "offense:BASE_BANGEL",
+      "index": 0,
+      "profile": "BASE_BANGEL",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:AIRRAID_RX_WESTCOAST_OL",
+      "index": 1,
+      "profile": "AIRRAID_RX_WESTCOAST_OL",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:WESTCOAST_TIMING",
+      "index": 2,
+      "profile": "WESTCOAST_TIMING",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:SPREAD_TEMPO",
+      "index": 3,
+      "profile": "SPREAD_TEMPO",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:PROSTYLE_CONTROL",
+      "index": 4,
+      "profile": "PROSTYLE_CONTROL",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:SHANAHAN_MOVEMENT",
+      "index": 5,
+      "profile": "SHANAHAN_MOVEMENT",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:ERHARDT_PERKINS_TAG",
+      "index": 6,
+      "profile": "ERHARDT_PERKINS_TAG",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:RUN_AND_SHOOT_CHOICE",
+      "index": 7,
+      "profile": "RUN_AND_SHOOT_CHOICE",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:PISTOL_CONFLICT",
+      "index": 8,
+      "profile": "PISTOL_CONFLICT",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "offense:POWER_SPREAD_SURFACE",
+      "index": 9,
+      "profile": "POWER_SPREAD_SURFACE",
+      "selection_count": 36,
+      "side": "OFFENSE"
+    },
+    {
+      "id": "defense:BASE_BANGEL",
+      "index": 0,
+      "profile": "BASE_BANGEL",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:MINT_SPILL_MATCH",
+      "index": 1,
+      "profile": "MINT_SPILL_MATCH",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:TITE_CANCEL_FIT",
+      "index": 2,
+      "profile": "TITE_CANCEL_FIT",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:SABAN_PATTERN_MATCH",
+      "index": 3,
+      "profile": "SABAN_PATTERN_MATCH",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:FANGIO_SPLIT_FIELD",
+      "index": 4,
+      "profile": "FANGIO_SPLIT_FIELD",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:LEBO_ZONE_PRESSURE",
+      "index": 5,
+      "profile": "LEBO_ZONE_PRESSURE",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:BELICHICK_MULTIPLE",
+      "index": 6,
+      "profile": "BELICHICK_MULTIPLE",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:MATCH_DISTRIBUTION",
+      "index": 7,
+      "profile": "MATCH_DISTRIBUTION",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:CREEPER_REPLACEMENT",
+      "index": 8,
+      "profile": "CREEPER_REPLACEMENT",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    },
+    {
+      "id": "defense:BEAR_DENT_CONTROL",
+      "index": 9,
+      "profile": "BEAR_DENT_CONTROL",
+      "selection_count": 72,
+      "side": "DEFENSE"
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+bangel 1.0
+module mj.memory_kernel
+effects pure
+import std.vector
+
+# F-017 resource-memory lifecycle. These are application stages, not JP R-states.
+export record Lifecycle
+  stage: Text
+  generation: Int
+end
+export record Model
+  model_sha256: Text
+  program_profile_sha256: Text
+  game_plan_sha256: Text
+  film_evidence_sha256: Text
+end
+export record Signal
+  id: Text
+  receipt_ref: Text
+  namespace: Text
+  observed_at: Int
+  available_at: Int
+  provenance: Text
+  classified: Bool
+  compatible: Bool
+  domain_retention_qualified: Bool
+end
+export record Validation
+  id: Text
+  receipt_ref: Text
+  namespace: Text
+  observed_at: Int
+  available_at: Int
+  provenance: Text
+  target: Real
+  prior_prediction: Real
+  candidate_prediction: Real
+end
+export record Assessment
+  promoted: Bool
+  reason: Text
+  qualified_signals: Int
+  validation_count: Int
+  loss_evaluated: Bool
+  prior_loss: Real
+  candidate_loss: Real
+end
+
+export function transition(state: Lifecycle, action: Text, checkpoint_valid: Bool) -> Result[Lifecycle]
+  var result: Result[Lifecycle] = Result.Err(Failure(code = "INVALID_LIFECYCLE", message = "No transition or uncleared generation reuse"))
+  if state.generation >= 0 and state.generation <= 1000000
+    if state.stage == "UNINITIALIZED" and state.generation == 0 and action == "INIT"
+      set result = Result.Ok(Lifecycle(stage = "ACTIVE", generation = 0))
+    end
+    if state.stage == "ACTIVE" and action == "QUIESCE"
+      set result = Result.Ok(Lifecycle(stage = "QUIESCE", generation = state.generation))
+    end
+    if state.stage == "QUIESCE" and action == "SEAL"
+      set result = Result.Ok(Lifecycle(stage = "SEAL", generation = state.generation))
+    end
+    if state.stage == "SEAL" and action == "CHECKPOINT" and checkpoint_valid
+      set result = Result.Ok(Lifecycle(stage = "CHECKPOINT", generation = state.generation))
+    end
+    if state.stage == "CHECKPOINT" and action == "DETACH" and checkpoint_valid
+      set result = Result.Ok(Lifecycle(stage = "DETACH", generation = state.generation))
+    end
+    if state.stage == "DETACH" and action == "RECLAIM" and checkpoint_valid
+      set result = Result.Ok(Lifecycle(stage = "RECLAIM", generation = state.generation))
+    end
+    if state.stage == "RECLAIM" and action == "ACTIVATE" and checkpoint_valid and state.generation < 1000000
+      set result = Result.Ok(Lifecycle(stage = "ACTIVE", generation = state.generation + 1))
+    end
+  end
+  return result
+end
+
+export function access(state: Lifecycle, operation: Text) -> Result[Bool]
+  var result: Result[Bool] = Result.Err(Failure(code = "MEMORY_INACTIVE", message = "Lifecycle disallows the requested memory access"))
+  if state.generation >= 0 and state.generation <= 1000000
+    if operation == "APPEND" and state.stage == "ACTIVE"
+      set result = Result.Ok(true)
+    end
+    if operation == "SNAPSHOT" and (state.stage == "ACTIVE" or state.stage == "QUIESCE" or state.stage == "SEAL" or state.stage == "CHECKPOINT")
+      set result = Result.Ok(true)
+    end
+  end
+  return result
+end
+
+function unique_signal(signal: Signal, signals: Vector[Signal], request_id: Text) -> Bool
+  var ids: Int = 0
+  var refs: Int = 0
+  for other in signals limit 64
+    if signal.id == other.id
+      set ids = ids + 1
+    end
+    if signal.receipt_ref == other.receipt_ref
+      set refs = refs + 1
+    end
+  end
+  return ids == 1 and refs == 1 and signal.id != request_id
+end
+
+function unique_validation(item: Validation, validation: Vector[Validation], signals: Vector[Signal], request_id: Text) -> Bool
+  var ids: Int = 0
+  var refs: Int = 0
+  var separate: Bool = item.id != request_id
+  for other in validation limit 16
+    if item.id == other.id
+      set ids = ids + 1
+    end
+    if item.receipt_ref == other.receipt_ref
+      set refs = refs + 1
+    end
+  end
+  for signal in signals limit 64
+    if item.id == signal.id or item.receipt_ref == signal.receipt_ref
+      set separate = false
+    end
+  end
+  return ids == 1 and refs == 1 and separate
+end
+
+export function assess(request_id: Text, namespace: Text, as_of: Int, baseline: Model, candidate: Model, signals: Vector[Signal], validation: Vector[Validation], reviewed: Bool, verdict: Text) -> Result[Assessment]
+  var qualified: Int = 0
+  var valid: Bool = as_of >= 0 and vector.length(signals) <= 64 and vector.length(validation) <= 16
+  var training_end: Int = 0
+  for signal in signals limit 64
+    if signal.observed_at < 0 or signal.observed_at > signal.available_at or signal.available_at >= as_of or not unique_signal(signal, signals, request_id)
+      set valid = false
+    end
+    if signal.available_at > training_end
+      set training_end = signal.available_at
+    end
+    if signal.namespace == namespace and signal.provenance == "OBSERVED" and signal.classified and signal.compatible and signal.domain_retention_qualified
+      set qualified = qualified + 1
+    end
+  end
+  var prior_loss: Real = 0.0
+  var candidate_loss: Real = 0.0
+  var validation_valid: Bool = true
+  for item in validation limit 16
+    if item.namespace != namespace or item.provenance != "OBSERVED" or item.observed_at <= training_end or item.observed_at > item.available_at or item.available_at >= as_of or not unique_validation(item, validation, signals, request_id)
+      set validation_valid = false
+    end
+    if (item.target != 0.0 and item.target != 1.0) or item.prior_prediction < 0.0 or item.prior_prediction > 1.0 or item.candidate_prediction < 0.0 or item.candidate_prediction > 1.0
+      set validation_valid = false
+    end
+    set prior_loss = prior_loss + (item.prior_prediction - item.target) * (item.prior_prediction - item.target)
+    set candidate_loss = candidate_loss + (item.candidate_prediction - item.target) * (item.candidate_prediction - item.target)
+  end
+  var evaluated: Bool = valid and validation_valid and vector.length(validation) >= 3
+  if evaluated
+    set prior_loss = prior_loss / vector.length(validation)
+    set candidate_loss = candidate_loss / vector.length(validation)
+  else
+    set prior_loss = 0.0
+    set candidate_loss = 0.0
+  end
+  var reason: Text = "PROMOTION_QUALIFIED"
+  var promoted: Bool = false
+  if baseline.program_profile_sha256 != candidate.program_profile_sha256 or baseline.game_plan_sha256 != candidate.game_plan_sha256 or baseline.film_evidence_sha256 != candidate.film_evidence_sha256
+    set reason = "PROFILE_REWRITE_FORBIDDEN"
+  else
+    if baseline.model_sha256 == candidate.model_sha256
+      set reason = "MODEL_UNCHANGED"
+    else
+      if qualified != vector.length(signals)
+        set reason = "UNQUALIFIED_SIGNALS"
+      else
+        if qualified < 30
+          set reason = "INSUFFICIENT_SIGNALS"
+        else
+          if vector.length(validation) < 3
+            set reason = "INSUFFICIENT_VALIDATION"
+          else
+            if not evaluated
+              set reason = "INVALID_EVIDENCE"
+            else
+              if verdict == "DENY"
+                set reason = "DOWNSTREAM_DENY"
+              else
+                if not reviewed or verdict != "PASS"
+                  set reason = "DOWNSTREAM_HOLD"
+                else
+                  if candidate_loss >= prior_loss
+                    set reason = "LOSS_NOT_IMPROVED"
+                  else
+                    set promoted = true
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  var result: Result[Assessment] = Result.Ok(Assessment(promoted = promoted, reason = reason, qualified_signals = qualified, validation_count = vector.length(validation), loss_evaluated = evaluated, prior_loss = prior_loss, candidate_loss = candidate_loss))
+  if not valid or not validation_valid
+    set result = Result.Err(Failure(code = "INVALID_EVIDENCE", message = "Receipt identity, first-observation timing or disjoint validation failed"))
+  end
+  return result
+end

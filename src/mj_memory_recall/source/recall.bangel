@@ -1,0 +1,442 @@
+bangel 1.0
+module mj.recall
+effects pure
+import std.math
+import std.vector
+
+# MJ-Memory-Recall/0.1.0. Application memory, not a biological or JP state.
+export record Point
+  x: Real
+  y: Real
+end
+export record Frame
+  x_min: Real
+  y_min: Real
+  width: Real
+  height: Real
+end
+export enum Feature
+  Missing(reason: Text)
+  Known(value: Real)
+end
+export enum Position
+  Missing(reason: Text)
+  Known(point: Point)
+end
+export record Event
+  actor: Text
+  step: Int
+  position: Position
+  command: Result[Text]
+end
+export record Curve
+  start: Point
+  control: Point
+  finish: Point
+  command: Text
+end
+export record Aligned
+  observation: Event
+  remembered: Event
+  has_curve: Bool
+  curve: Curve
+end
+export record Episode
+  id: Text
+  namespace: Text
+  entity: Text
+  relation: Text
+  context: Text
+  observed_at: Int
+  available_at: Int
+  pattern: Vector[Real; 9]
+  aligned: Vector[Aligned]
+end
+export record EvidenceScore
+  available: Bool
+  value: Real
+end
+export record Score
+  id: Text
+  entity: Text
+  relation: Text
+  context: Text
+  eligible: Bool
+  base: Real
+  trace: Real
+  playbook: Real
+  trace_count: Int
+  playbook_count: Int
+  command_count: Int
+  combined: Real
+end
+export record Retrieval
+  candidate: Score
+  baseline_id: Text
+  baseline_available: Bool
+  available: Bool
+  matched: Bool
+  known: Int
+  margin: Real
+  status: Text
+end
+
+function point_on_curve(curve: Curve, phase: Real) -> Point
+  let remaining = 1.0 - phase
+  return Point(x = remaining * remaining * curve.start.x + 2.0 * remaining * phase * curve.control.x + phase * phase * curve.finish.x,
+    y = remaining * remaining * curve.start.y + 2.0 * remaining * phase * curve.control.y + phase * phase * curve.finish.y)
+end
+
+# The pictured YP-075/TP-375 grid numbers N1..N3 on the bottom row.
+# This is a versioned schematic projection; canvas coordinates are not yards.
+function node_for(point: Point, frame: Frame) -> Int
+  var column: Int = 0
+  var row: Int = 2
+  if point.x >= frame.x_min + frame.width / 3.0
+    set column = 1
+  end
+  if point.x >= frame.x_min + frame.width * 2.0 / 3.0
+    set column = 2
+  end
+  if point.y >= frame.y_min + frame.height / 3.0
+    set row = 1
+  end
+  if point.y >= frame.y_min + frame.height * 2.0 / 3.0
+    set row = 0
+  end
+  return row * 3 + column + 1
+end
+
+function projected_path_checked(curve: Curve, frame: Frame) -> Vector[Int; 9]
+  return [node_for(point_on_curve(curve, 0.0), frame), node_for(point_on_curve(curve, 0.125), frame),
+    node_for(point_on_curve(curve, 0.25), frame), node_for(point_on_curve(curve, 0.375), frame),
+    node_for(point_on_curve(curve, 0.5), frame), node_for(point_on_curve(curve, 0.625), frame),
+    node_for(point_on_curve(curve, 0.75), frame), node_for(point_on_curve(curve, 0.875), frame),
+    node_for(point_on_curve(curve, 1.0), frame)]
+end
+
+function point_similarity(a: Point, b: Point, frame: Frame) -> Real
+  let dx = (a.x - b.x) / frame.width
+  let dy = (a.y - b.y) / frame.height
+  return math.max(0.0, 1.0 - (dx * dx + dy * dy) / 0.04)
+end
+function position_score(a: Position, b: Position, frame: Frame) -> EvidenceScore
+  var result: EvidenceScore = EvidenceScore(available = false, value = 0.0)
+  match a
+    case Position.Known(first)
+      match b
+        case Position.Known(second)
+          set result = EvidenceScore(available = true, value = point_similarity(first, second, frame))
+        case Position.Missing(reason)
+          set result = result
+      end
+    case Position.Missing(reason)
+      set result = result
+  end
+  return result
+end
+function command_score(a: Result[Text], b: Result[Text]) -> EvidenceScore
+  var available: Bool = false
+  var value: Real = 0.0
+  match a
+    case Result.Ok(first)
+      match b
+        case Result.Ok(second)
+          set available = true
+          if first == second
+            set value = 1.0
+          end
+        case Result.Err(error)
+          set value = value
+      end
+    case Result.Err(error)
+      set value = value
+  end
+  return EvidenceScore(available = available, value = value)
+end
+function compatible(expected: Text, observation: Result[Text]) -> Bool
+  var result: Bool = true
+  match observation
+    case Result.Ok(value)
+      set result = value == expected
+    case Result.Err(error)
+      set result = true
+  end
+  return result
+end
+function certain(expected: Text, observation: Result[Text]) -> Bool
+  var result: Bool = false
+  match observation
+    case Result.Ok(value)
+      set result = value == expected
+    case Result.Err(error)
+      set result = false
+  end
+  return result
+end
+export function known_count(cue: Vector[Feature; 9]) -> Int
+  var count: Int = 0
+  for feature in cue limit 9
+    match feature
+      case Feature.Known(value)
+        set count = count + 1
+      case Feature.Missing(reason)
+        set count = count
+    end
+  end
+  return count
+end
+function cue_similarity(cue: Vector[Feature; 9], pattern: Vector[Real; 9]) -> Real
+  var sum: Real = 0.0
+  var known: Int = 0
+  var index: Int = 0
+  for feature in cue limit 9
+    match feature
+      case Feature.Known(value)
+        match vector.at(pattern, index)
+          case Result.Ok(stored)
+            set sum = sum + 1.0 - math.abs(value - stored) / 1.8
+            set known = known + 1
+          case Result.Err(error)
+            set sum = sum
+        end
+      case Feature.Missing(reason)
+        set sum = sum
+    end
+    set index = index + 1
+  end
+  if known > 0
+    set sum = sum / known
+  end
+  return sum
+end
+function empty_score() -> Score
+  return Score(id = "", entity = "", relation = "", context = "", eligible = false,
+    base = 0.0, trace = 0.0, playbook = 0.0, trace_count = 0, playbook_count = 0,
+    command_count = 0, combined = 0.0)
+end
+function score(episode: Episode, cue: Vector[Feature; 9], frame: Frame, namespace: Text, as_of: Int,
+  entity: Result[Text], relation: Result[Text], context: Result[Text]) -> Score
+  let allowed = (episode.namespace == namespace and episode.observed_at <= episode.available_at and episode.available_at < as_of
+    and compatible(episode.entity, entity) and compatible(episode.relation, relation) and compatible(episode.context, context))
+  let base = cue_similarity(cue, episode.pattern)
+  var trace_total: Real = 0.0
+  var play_total: Real = 0.0
+  var trace_count: Int = 0
+  var play_count: Int = 0
+  var commands: Int = 0
+  for pair in episode.aligned limit 9
+    let trace_position = position_score(pair.observation.position, pair.remembered.position, frame)
+    let trace_command = command_score(pair.observation.command, pair.remembered.command)
+    if trace_position.available and pair.observation.actor == pair.remembered.actor and pair.observation.step == pair.remembered.step
+      var local: Real = trace_position.value
+      if trace_command.available
+        set local = local * 0.75 + trace_command.value * 0.25
+        set commands = commands + 1
+      end
+      set trace_total = trace_total + local
+      set trace_count = trace_count + 1
+    end
+    if pair.has_curve
+      let expected = point_on_curve(pair.curve, pair.observation.step / 8)
+      let play_position = position_score(pair.observation.position, Position.Known(point = expected), frame)
+      let play_command = command_score(pair.observation.command, Result.Ok(pair.curve.command))
+      if play_position.available
+        var local: Real = play_position.value
+        if play_command.available
+          set local = local * 0.75 + play_command.value * 0.25
+        end
+        set play_total = play_total + local
+        set play_count = play_count + 1
+      end
+    end
+  end
+  var trace: Real = 0.0
+  var playbook: Real = 0.0
+  var combined: Real = base
+  var weight: Real = 1.0
+  if trace_count >= 3
+    set trace = trace_total / trace_count
+    set combined = combined + trace * 2.0
+    set weight = weight + 2.0
+  end
+  if play_count >= 3
+    set playbook = play_total / play_count
+    set combined = combined + playbook * 2.0
+    set weight = weight + 2.0
+  end
+  set combined = combined / weight
+  let supported = base >= 0.8 or (base >= 0.5 and (trace >= 0.9 or playbook >= 0.9))
+  return Score(id = episode.id, entity = episode.entity, relation = episode.relation, context = episode.context,
+    eligible = allowed and supported, base = base, trace = trace, playbook = playbook,
+    trace_count = trace_count, playbook_count = play_count, command_count = commands, combined = combined)
+end
+
+function retrieve_checked(episodes: Vector[Episode], cue: Vector[Feature; 9], frame: Frame, namespace: Text, as_of: Int,
+  entity: Result[Text], relation: Result[Text], context: Result[Text]) -> Retrieval
+  var best: Score = empty_score()
+  var runner: Real = -1.0
+  var top: Real = -1.0
+  var base_top: Real = -1.0
+  var base_runner: Real = -1.0
+  var base_id: Text = ""
+  for episode in episodes limit 16
+    let item = score(episode, cue, frame, namespace, as_of, entity, relation, context)
+    if episode.namespace == namespace and episode.observed_at <= episode.available_at and episode.available_at < as_of
+      if item.base > base_top
+        set base_runner = base_top
+        set base_top = item.base
+        set base_id = item.id
+      else
+        if item.base > base_runner
+          set base_runner = item.base
+        end
+      end
+    end
+    if item.eligible
+      if item.combined > top
+        set runner = top
+        set top = item.combined
+        set best = item
+      else
+        if item.combined > runner
+          set runner = item.combined
+        end
+      end
+    end
+  end
+  let known = known_count(cue)
+  let margin = top - math.max(0.0, runner)
+  let baseline = known >= 3 and base_top >= 0.8 and base_top - math.max(0.0, base_runner) >= 0.1
+  let available = known >= 3 and best.eligible and top >= 0.8 and margin >= 0.1
+  let matched = available and certain(best.entity, entity) and certain(best.relation, relation) and certain(best.context, context)
+  var status: Text = "INSUFFICIENT_EVIDENCE"
+  if known >= 3 and top >= 0.8 and margin < 0.1
+    set status = "AMBIGUOUS"
+  end
+  if available
+    set status = "CONTEXT_HOLD"
+  end
+  if matched
+    set status = "RECALLED"
+  end
+  return Retrieval(candidate = best, baseline_id = base_id, baseline_available = baseline,
+    available = available, matched = matched, known = known, margin = margin, status = status)
+end
+
+export function review_status(matched: Bool, reviewed: Bool, verdict: Text) -> Text
+  var result: Text = "DOWNSTREAM_HOLD"
+  if reviewed and verdict == "DENY"
+    set result = "DOWNSTREAM_DENY"
+  end
+  if reviewed and verdict == "PASS" and matched
+    set result = "MATCH_FOR_REVIEW"
+  end
+  return result
+end
+
+function frame_valid(frame: Frame) -> Bool
+  return frame.width > 0.0 and frame.height > 0.0
+end
+function point_valid(point: Point, frame: Frame) -> Bool
+  return point.x >= frame.x_min and point.x <= frame.x_min + frame.width and point.y >= frame.y_min and point.y <= frame.y_min + frame.height
+end
+function position_valid(position: Position, frame: Frame) -> Bool
+  var valid: Bool = true
+  match position
+    case Position.Known(point)
+      set valid = point_valid(point, frame)
+    case Position.Missing(reason)
+      set valid = true
+  end
+  return valid
+end
+function curve_valid(curve: Curve, frame: Frame) -> Bool
+  return point_valid(curve.start, frame) and point_valid(curve.control, frame) and point_valid(curve.finish, frame)
+end
+export function projected_path(curve: Curve, frame: Frame) -> Result[Vector[Int; 9]]
+  var result: Result[Vector[Int; 9]] = Result.Err(Failure(code = "RECALL_GEOMETRY", message = "Invalid schematic geometry"))
+  if frame_valid(frame) and curve_valid(curve, frame)
+    set result = Result.Ok(projected_path_checked(curve, frame))
+  end
+  return result
+end
+export function project_point(point: Point, frame: Frame) -> Result[Int]
+  var result: Result[Int] = Result.Err(Failure(code = "RECALL_GEOMETRY", message = "Invalid schematic geometry"))
+  if frame_valid(frame) and point_valid(point, frame)
+    set result = Result.Ok(node_for(point, frame))
+  end
+  return result
+end
+export function retrieve(episodes: Vector[Episode], cue: Vector[Feature; 9], frame: Frame, namespace: Text, as_of: Int,
+  entity: Result[Text], relation: Result[Text], context: Result[Text]) -> Result[Retrieval]
+  var valid: Bool = frame_valid(frame) and vector.length(episodes) >= 1 and vector.length(episodes) <= 16
+  for feature in cue limit 9
+    match feature
+      case Feature.Known(value)
+        set valid = valid and value >= -0.9 and value <= 0.9
+      case Feature.Missing(reason)
+        set valid = valid
+    end
+  end
+  for episode in episodes limit 16
+    set valid = valid and vector.length(episode.aligned) <= 9
+    for value in episode.pattern limit 9
+      set valid = valid and (value == -0.9 or value == 0.9)
+    end
+    for pair in episode.aligned limit 9
+      set valid = valid and pair.observation.step >= 0 and pair.observation.step <= 8
+      set valid = valid and position_valid(pair.observation.position, frame) and position_valid(pair.remembered.position, frame)
+      if pair.has_curve
+        set valid = valid and curve_valid(pair.curve, frame)
+      end
+    end
+  end
+  var result: Result[Retrieval] = Result.Err(Failure(code = "RECALL_INPUT", message = "Recall input violates native bounds"))
+  if valid
+    set result = Result.Ok(retrieve_checked(episodes, cue, frame, namespace, as_of, entity, relation, context))
+  end
+  return result
+end
+
+export record Transition
+  previous: Text
+  following: Text
+end
+export record Forecast
+  command: Text
+  node: Int
+  support: Int
+  available: Bool
+  probability: Real
+end
+export function forecast(history: Vector[Transition], previous: Text) -> Forecast
+  var best: Int = 0
+  var second: Int = 0
+  var total: Int = 0
+  var chosen: Text = ""
+  var chosen_node: Int = 0
+  var ordinal: Int = 0
+  for command in ["let", "measure", "derive", "require", "if", "for", "match", "emit", "return"] limit 9
+    set ordinal = ordinal + 1
+    var count: Int = 0
+    for transition in history limit 128
+      if transition.previous == previous and transition.following == command
+        set count = count + 1
+      end
+    end
+    set total = total + count
+    if count > best
+      set second = best
+      set best = count
+      set chosen = command
+      set chosen_node = ordinal
+    else
+      if count > second
+        set second = count
+      end
+    end
+  end
+  return Forecast(command = chosen, node = chosen_node, support = total,
+    available = total >= 3 and best > second, probability = (best + 1) / (total + 9))
+end

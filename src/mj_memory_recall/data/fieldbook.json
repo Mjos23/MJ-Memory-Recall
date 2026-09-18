@@ -1,0 +1,170 @@
+{
+  "selections": [
+    {
+      "diagram_pdf_page_1_based": 3,
+      "family_id": "dloc:defense:over-front",
+      "id": "dlxs:defense:over-front:tite-cancel-fit",
+      "name": "Over Front — Tite Cancel Fit",
+      "notes_pdf_page_1_based": 4,
+      "profile": "TITE_CANCEL_FIT"
+    },
+    {
+      "diagram_pdf_page_1_based": 5,
+      "family_id": "dloc:defense:bracket",
+      "id": "dlxs:defense:bracket:fangio-split-field",
+      "name": "Bracket — Fangio Split Field",
+      "notes_pdf_page_1_based": 6,
+      "profile": "FANGIO_SPLIT_FIELD"
+    },
+    {
+      "diagram_pdf_page_1_based": 7,
+      "family_id": "dloc:offense:half-slide-protection",
+      "id": "dlxs:offense:half-slide-protection:run-and-shoot-choice",
+      "name": "Half-Slide Protection — Run And Shoot Choice",
+      "notes_pdf_page_1_based": 8,
+      "profile": "RUN_AND_SHOOT_CHOICE"
+    },
+    {
+      "diagram_pdf_page_1_based": 9,
+      "family_id": "dloc:offense:stick",
+      "id": "dlxs:offense:stick:airraid-rx-westcoast-ol",
+      "name": "Stick — Airraid Rx Westcoast Ol",
+      "notes_pdf_page_1_based": 10,
+      "profile": "AIRRAID_RX_WESTCOAST_OL"
+    },
+    {
+      "diagram_pdf_page_1_based": 11,
+      "family_id": "dloc:defense:inside-zone-fit",
+      "id": "dlxs:defense:inside-zone-fit:mint-spill-match",
+      "name": "Inside-Zone Fit — Mint Spill Match",
+      "notes_pdf_page_1_based": 12,
+      "profile": "MINT_SPILL_MATCH"
+    },
+    {
+      "diagram_pdf_page_1_based": 13,
+      "family_id": "dloc:defense:quarters",
+      "id": "dlxs:defense:quarters:saban-pattern-match",
+      "name": "Quarters — Saban Pattern Match",
+      "notes_pdf_page_1_based": 14,
+      "profile": "SABAN_PATTERN_MATCH"
+    },
+    {
+      "diagram_pdf_page_1_based": 15,
+      "family_id": "dloc:offense:iso",
+      "id": "dlxs:offense:iso:pistol-conflict",
+      "name": "Isolation — Pistol Conflict",
+      "notes_pdf_page_1_based": 16,
+      "profile": "PISTOL_CONFLICT"
+    },
+    {
+      "diagram_pdf_page_1_based": 17,
+      "family_id": "dloc:offense:zone-read",
+      "id": "dlxs:offense:zone-read:base-bangel",
+      "name": "Zone Read — Base Bangel",
+      "notes_pdf_page_1_based": 18,
+      "profile": "BASE_BANGEL"
+    },
+    {
+      "diagram_pdf_page_1_based": 19,
+      "family_id": "dloc:defense:draw-fit",
+      "id": "dlxs:defense:draw-fit:match-distribution",
+      "name": "Draw Fit — Match Distribution",
+      "notes_pdf_page_1_based": 20,
+      "profile": "MATCH_DISTRIBUTION"
+    },
+    {
+      "diagram_pdf_page_1_based": 21,
+      "family_id": "dloc:defense:overload-pressure",
+      "id": "dlxs:defense:overload-pressure:lebo-zone-pressure",
+      "name": "Overload Pressure — Lebo Zone Pressure",
+      "notes_pdf_page_1_based": 22,
+      "profile": "LEBO_ZONE_PRESSURE"
+    },
+    {
+      "diagram_pdf_page_1_based": 23,
+      "family_id": "dloc:offense:wide-zone",
+      "id": "dlxs:offense:wide-zone:shanahan-movement",
+      "name": "Wide Zone — Shanahan Movement",
+      "notes_pdf_page_1_based": 24,
+      "profile": "SHANAHAN_MOVEMENT"
+    },
+    {
+      "diagram_pdf_page_1_based": 25,
+      "family_id": "dloc:offense:tempo-control",
+      "id": "dlxs:offense:tempo-control:power-spread-surface",
+      "name": "Tempo Control — Power Spread Surface",
+      "notes_pdf_page_1_based": 26,
+      "profile": "POWER_SPREAD_SURFACE"
+    },
+    {
+      "diagram_pdf_page_1_based": 27,
+      "family_id": "dloc:offense:levels",
+      "id": "dlxs:offense:levels:erhardt-perkins-tag",
+      "name": "Levels — Erhardt Perkins Tag",
+      "notes_pdf_page_1_based": 28,
+      "profile": "ERHARDT_PERKINS_TAG"
+    },
+    {
+      "diagram_pdf_page_1_based": 29,
+      "family_id": "dloc:defense:box-coverage",
+      "id": "dlxs:defense:box-coverage:belichick-multiple",
+      "name": "Box Coverage — Belichick Multiple",
+      "notes_pdf_page_1_based": 30,
+      "profile": "BELICHICK_MULTIPLE"
+    },
+    {
+      "diagram_pdf_page_1_based": 31,
+      "family_id": "dloc:offense:post-over",
+      "id": "dlxs:offense:post-over:westcoast-timing",
+      "name": "Post-Over — Westcoast Timing",
+      "notes_pdf_page_1_based": 32,
+      "profile": "WESTCOAST_TIMING"
+    },
+    {
+      "diagram_pdf_page_1_based": 33,
+      "family_id": "dloc:offense:red-zone-menu",
+      "id": "dlxs:offense:red-zone-menu:spread-tempo",
+      "name": "Red Zone Menu — Spread Tempo",
+      "notes_pdf_page_1_based": 34,
+      "profile": "SPREAD_TEMPO"
+    },
+    {
+      "diagram_pdf_page_1_based": 35,
+      "family_id": "dloc:offense:outside-zone",
+      "id": "dlxs:offense:outside-zone:prostyle-control",
+      "name": "Outside Zone — Prostyle Control",
+      "notes_pdf_page_1_based": 36,
+      "profile": "PROSTYLE_CONTROL"
+    },
+    {
+      "diagram_pdf_page_1_based": 37,
+      "family_id": "dloc:defense:read-qb-fit",
+      "id": "dlxs:defense:read-qb-fit:bear-dent-control",
+      "name": "Read and QB-Run Fit — Bear Dent Control",
+      "notes_pdf_page_1_based": 38,
+      "profile": "BEAR_DENT_CONTROL"
+    },
+    {
+      "diagram_pdf_page_1_based": 39,
+      "family_id": "dloc:defense:two-man",
+      "id": "dlxs:defense:two-man:creeper-replacement",
+      "name": "2-Man — Creeper Replacement",
+      "notes_pdf_page_1_based": 40,
+      "profile": "CREEPER_REPLACEMENT"
+    },
+    {
+      "diagram_pdf_page_1_based": 41,
+      "family_id": "dloc:defense:dime-front",
+      "id": "dlxs:defense:dime-front:base-bangel",
+      "name": "Dime Front — Base Bangel",
+      "notes_pdf_page_1_based": 42,
+      "profile": "BASE_BANGEL"
+    }
+  ],
+  "source_page_count": 42,
+  "source_pdf_display_label": "Bangel-Leverage-20-Play-Physics-Field-Book.pdf",
+  "source_pdf_label_migrated": true,
+  "source_pdf_sha256": "bb1c791c3b3af391978b716f0b11b9a98771e93203dc82e3c8403197fec78b17",
+  "source_selection_method_display": "One non-repeating family from each of 10 offense and 10 defense profile slots; seed BANGEL-LEVERAGE-FIELD-BOOK-20260910",
+  "source_selection_method_original_sha256": "47c6308ae36b1ec40f023702084b90d8f1183d39f4f99accd3bde10d65787a26"
+}

@@ -1,0 +1,171 @@
+{
+  "archives": [
+    {
+      "display_label": "Bangel-Leverage-DL-B163-B762-Playbook-Atlas.zip",
+      "id": "playbook-atlas",
+      "sha256": "82d1476db9fdefaaccb4c728bd87d38adcbb2e97dc3f68721cab13456329ca61"
+    },
+    {
+      "display_label": "Bangel-Leverage-Lecanto-Atlas-0.9.0.zip",
+      "id": "lecanto-atlas-0.9.0",
+      "sha256": "845fd175b3f2a7f0ec7a9f7ff4cdc2c00d117b358b0beee120297beed5ca6852"
+    },
+    {
+      "display_label": "Bangel-Leverage-DL-B007-B1340-Reference-Implementation-0.10.0.zip",
+      "id": "reference-implementation-0.10.0",
+      "sha256": "fce6004704978c5ca3296afccdea0738848d38e9bc935bcf1fc394d65acb22bc"
+    }
+  ],
+  "audit_inputs_sha256": {
+    "archive-provenance.json": "e0c7390a7aaa425c34c32761f55ac0654b7fd6c9ac987b8033bc19abb68962d5",
+    "families.raw.json": "6506761f976d37cc1188f4bedf7d6fb2628c7fd74defc50965af8f7ea72907d5",
+    "formations.raw.jsonl": "44deb6617b5667c2b7fc7f844165a13cd004f30e8ec7188a78419d4d0f4a8225",
+    "geometry-collisions.json": "d3ec01415cc784b19471c961d25fb54167f16bff8de64788fddb03890771238e",
+    "plays.raw.jsonl": "b677c18ffadb96df6a97249e71311a6ab8e7bded1b2aa9d9cf553b2e167e5ced",
+    "profiles.raw.json": "2e9bf3eb2e705078557b93e22e90fca497d130d45b632c139ff3d3bdb8cd57bf",
+    "summary.json": "74f457e5d091f98c4fd17b7d4f13b8fb0c9d7da58b4cd4c1749c459e4eb0e56c"
+  },
+  "display_labels_migrated": true,
+  "members": [
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 44506,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/offense_catalog.py",
+      "member_sha256": "ebf17f85358b221163ec730c7d1e8c3973741c05daa541387296340c9cd07225"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 53439,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/defense_catalog.py",
+      "member_sha256": "e9e9cd96ad6bfd9b9533c81421b88a2ff24e12f4e9ad5dd5d2622a8a6257bccd"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 93777,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/playbook_expansion.py",
+      "member_sha256": "a98711d80fffae06acb45b7ae898f87a3fbf07727cf3753ff0612c5b3a8731c2"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 40695,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/lecanto.py",
+      "member_sha256": "43ceda3fce7afb60dcba5342518c77c5b6930714e2cc33d106677dab2df7144f"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 5778,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/bangel_model.py",
+      "member_sha256": "e279faf4be671f35b2b44059756ccc1ed6c514d631dbe6b67f53ca3b09b10255"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 11090,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/program_profile.py",
+      "member_sha256": "cf433f3929269c1baa167bd793a532667fa7088811206804f5874e06a1b5fb3d"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 17175,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/validator.py",
+      "member_sha256": "bed0a65d8df2a8995d737cbdfaf36ceb30c4a8cb0ea922e9309027dc604e3b1f"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 4473,
+      "member_display_label": "bangel-leverage/src/bangel_leverage/spatial.py",
+      "member_sha256": "104afac7a6414fb3eb78f9fae22ed4a35d7eb7244527f3e1b2c04dd9e7b4a601"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 3586,
+      "member_display_label": "bangel-leverage/specs/dl-b067-b090-offense-catalog-contract.md",
+      "member_sha256": "411a9d7b65486935d920abebd6aa38fa45f601758bceb8190718ae9b2b5b3e4a"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 6978,
+      "member_display_label": "bangel-leverage/specs/dl-b091-b162-defense-catalog-contract.md",
+      "member_sha256": "3eac9bf29a587867d53115524c1110c85f2dd967a75262532f6a3d4a14921015"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 5950,
+      "member_display_label": "bangel-leverage/specs/dl-b163-b762-playbook-expansion-contract.md",
+      "member_sha256": "9c4cc9665d981a80f55802a2a370225350ab5b8c310faff087379e93f6d1f454"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 5752,
+      "member_display_label": "bangel-leverage/specs/dl-b763-b922-bangel-lecanto-contract.md",
+      "member_sha256": "383aa5d46e2682a04cdb612d615e3ca9481b3bf79aff5b6d88992734ca3e2f98"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 4281,
+      "member_display_label": "bangel-leverage/specs/dl-b049-b066-football-semantics-contract.md",
+      "member_sha256": "9d3ab228a703fc990e64a4969229dbd576d81f4d669ec1d1d7b4d2bc1c4e40db"
+    },
+    {
+      "archive": "reference-implementation-0.10.0",
+      "member_bytes": 3466,
+      "member_display_label": "bangel-leverage/specs/dl-b019-b036-contract.md",
+      "member_sha256": "6a74d15eba991e191e336b79a2052ac9df8abf51a6777742f84ebf2b05e9ea59"
+    },
+    {
+      "archive": "playbook-atlas",
+      "member_bytes": 11220565,
+      "member_display_label": "Bangel-Leverage-Playbook-Atlas/atlas.jsonl",
+      "member_sha256": "2826074defa075ac42b8dd6f1c0c4fb81a1fd5a1fe585b852ff0168030438acc"
+    },
+    {
+      "archive": "playbook-atlas",
+      "member_bytes": 951426,
+      "member_display_label": "Bangel-Leverage-Playbook-Atlas/index.json",
+      "member_sha256": "c50df86bbb13e020e1babd9f66133723ef1213f1ebc404ec08ae1c4583193081"
+    },
+    {
+      "archive": "playbook-atlas",
+      "member_bytes": 1515,
+      "member_display_label": "Bangel-Leverage-Playbook-Atlas/manifest.json",
+      "member_sha256": "addb5f27e33a8c8d2abc3d3681d063c42bcc6a5e4eea4c78a8b993be6cf68420"
+    },
+    {
+      "archive": "lecanto-atlas-0.9.0",
+      "member_bytes": 19326235,
+      "member_display_label": "Bangel-Leverage-Lecanto-Atlas-0.9.0/sources.jsonl",
+      "member_sha256": "05bf3f881ce6f2c535ea92f213a2be10e3454f3e5551683854bfa2804c424a4a"
+    },
+    {
+      "archive": "lecanto-atlas-0.9.0",
+      "member_bytes": 1495166,
+      "member_display_label": "Bangel-Leverage-Lecanto-Atlas-0.9.0/corpus-index.json",
+      "member_sha256": "48fc79c05cde35d937a429268f795a5f78c1b064e14389bf61028a6225e1b562"
+    },
+    {
+      "archive": "lecanto-atlas-0.9.0",
+      "member_bytes": 1905,
+      "member_display_label": "Bangel-Leverage-Lecanto-Atlas-0.9.0/manifest.json",
+      "member_sha256": "59cae80b76ae20cea051db821d1ba9c3a3dfed90d75a854d45a72eb5d9f7ab4b"
+    }
+  ],
+  "migration": {
+    "case_preserved": true,
+    "current_product_label": "Bangel",
+    "historical_product_label_sha256": "cee515720c19b3ad855d35ab72eddd9107bde3496c8d9b0603293edc8b66d11b",
+    "normalized_records_use_index_shard_digests": true,
+    "source_digests_describe_original_bytes": true
+  },
+  "original_byte_hashes_retained": true,
+  "schema": "MJ-Playbook-Provenance/0.1.0",
+  "source_integrity_checks": [
+    "Three recovered archive members equal extracted files",
+    "All 1440 source SHA256 values match actual UTF8 bytes",
+    "All 1440 original-logic SHA256 values match atlas objects excluding export-only record_type",
+    "All 1440 individual source files and compilation receipts bind to sources.jsonl",
+    "All 2520 SVG rendered SHA256 values match compilation receipts",
+    "All 4320 sequence links resolve",
+    "All 108 families have exactly ten profiles",
+    "Every play has 11 unique position assignment paths",
+    "All play primary IF/HOW/THEN declarations match family source rules"
+  ]
+}
