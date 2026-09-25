@@ -1,3 +1,8 @@
+
+> Current rights: all rights reserved by MJ Physics Engineering / Michael Bangel. No new license is granted by this revision. Prior grants and third-party notices remain effective; see the root LICENSE and LICENSING.md.
+
+> The import and verification statements below describe the recorded import revision. They are not fresh verification of this licensing update. Historical offline wheels retain their original notices.
+
 # Standalone repository — MJ-Memory-Recall 0.1.0
 
 This private repository contains the original verified 0.1.0 source snapshot,

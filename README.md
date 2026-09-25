@@ -1,5 +1,8 @@
 # MJ Memory Recall
 
+> Current rights: all rights reserved by MJ Physics Engineering / Michael Bangel. No new license is granted by this revision. Prior grants and third-party notices remain effective; see the root LICENSE and LICENSING.md.
+
+
 Version **0.1.0** adds reusable episodic recall and a physics-football overlay to
 the Bangel ecosystem. It can be installed independently or used by **MJ Neural
 Net**. All recall scoring, spatial projection, command prediction, lifecycle
